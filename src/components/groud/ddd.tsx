@@ -14,7 +14,7 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
             <Canvas
                 shadows
                 camera={{
-                    position: [-5, 1.5, 4],
+                    position: [-5, 1.5, 5],
                     fov: 90,
                     near: 0.1,
                     far: 100,
@@ -26,8 +26,8 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
                 <Environment>
                     <Cube {...{ openPanel, setOpenPanel }} />
                 </Environment>
-                <gridHelper args={[25, 25]} position={[0, -2, 0]} />
-                <axesHelper args={[5]} />
+                <gridHelper args={[70, 70]} position={[0, -2, 0]} />
+                {/* <axesHelper args={[5]} /> */}
 
                 <hemisphereLight
                     intensity={0.2}
@@ -47,7 +47,7 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
                     position={[0, 5, 5]}
                     intensity={1}
                 />
-                <OrbitControls minDistance={1} maxDistance={10} />
+                <OrbitControls minDistance={1} maxDistance={7} />
             </Canvas>
         </div>
     );
