@@ -42,8 +42,8 @@ export const screens: Record<
         src: "",
     },
     B4: {
-        type: "video",
-        src: "https://www.w3schools.com/html/mov_bbb.mp4",
+        type: "",
+        src: "",
     },
     C1: {
         isBlank: true,

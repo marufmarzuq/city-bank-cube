@@ -1,123 +1,150 @@
-import { useRef, useEffect, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
-import videoSrc from "../../assets/demo.mp4";
-import videoSrc1 from "../../assets/demo2.mp4";
-import videoSrc2 from "../../assets/demo3.mp4";
-import videoSrc3 from "../../assets/demo4.mp4";
-import videoSrc4 from "../../assets/demo5.mp4";
-import videoSrc5 from "../../assets/demo6.mp4";
+import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
+import { useStore } from "../../state/context";
+import { TScreenKeys } from "./data";
 
-interface CanvasVideoMaterialProps {
+interface VideoMaterialProps {
     videoSrc: string;
-    attachIndex: number;
 }
 
-const CanvasVideoMaterial = ({
-    videoSrc,
-    attachIndex,
-}: CanvasVideoMaterialProps) => {
-    const videoRef = useRef<HTMLVideoElement | null>(null);
-    const canvasRef = useRef<HTMLCanvasElement | null>(null);
-    const textureRef = useRef<THREE.CanvasTexture | null>(null);
-    const [isVideoReady, setIsVideoReady] = useState(false);
+const VideoMaterial = ({ videoSrc }: VideoMaterialProps) => {
+    const [video] = useState(() =>
+        Object.assign(document.createElement("video"), {
+            crossOrigin: "Anonymous",
+            loop: true,
+            muted: true,
+        })
+    );
 
     useEffect(() => {
-        const video = document.createElement("video");
         video.src = videoSrc;
-        video.crossOrigin = "anonymous";
-        video.loop = true;
-        video.muted = true;
-        video.playsInline = true;
+        void video.play();
+    }, [videoSrc, video]);
 
-        video.addEventListener("loadedmetadata", () => {
-            video.play().catch((error) => {
-                console.error("Error playing video:", error);
-            });
-            setIsVideoReady(true);
-        });
-
-        videoRef.current = video;
-
-        const canvas = document.createElement("canvas");
-        canvas.width = 512;
-        canvas.height = 512;
-        canvasRef.current = canvas;
-
-        const texture = new THREE.CanvasTexture(canvas);
-        textureRef.current = texture;
-
-        return () => {
-            video.pause();
-            video.src = "";
-            video.load();
-            texture.dispose();
-        };
-    }, [videoSrc]);
-
-    useFrame(() => {
-        if (
-            isVideoReady &&
-            videoRef.current &&
-            canvasRef.current &&
-            textureRef.current
-        ) {
-            const ctx = canvasRef.current.getContext("2d");
-            if (ctx) {
-                ctx.drawImage(
-                    videoRef.current,
-                    0,
-                    0,
-                    canvasRef.current.width,
-                    canvasRef.current.height
-                );
-                textureRef.current.needsUpdate = true;
-            }
-        }
-    });
-
-    return isVideoReady && textureRef.current ? (
-        <meshBasicMaterial
-            attach={`material-${attachIndex}`}
-            map={textureRef.current}
-        />
-    ) : null;
-};
-
-const Cube = () => {
     return (
-        <Canvas
-            shadows={true}
-            style={{
-                background:
-                    "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(237,224,214,1) 100%)",
-            }}
-        >
-            <axesHelper args={[5]} />
-            <ambientLight intensity={0.5} />
-            {/* <mesh rotation={[Math.PI / 4 - 0.17, 0, 0]} position={[0, 0, 0]}> */}
-            <mesh
-                onClick={(e) => console.log(e)}
-                rotation={[Math.PI / 4 - 0.17, 0, Math.PI / 4]}
-            >
-                <boxGeometry args={[1, 1, 1]} />
-                <CanvasVideoMaterial videoSrc={videoSrc} attachIndex={0} />
-                <CanvasVideoMaterial videoSrc={videoSrc1} attachIndex={1} />
-                <CanvasVideoMaterial videoSrc={videoSrc2} attachIndex={2} />
-                <CanvasVideoMaterial videoSrc={videoSrc3} attachIndex={3} />
-                <CanvasVideoMaterial videoSrc={videoSrc4} attachIndex={4} />
-                <CanvasVideoMaterial videoSrc={videoSrc5} attachIndex={5} />
-            </mesh>
-            {/* </mesh> */}
-            <OrbitControls
-                minPolarAngle={Math.PI / 4}
-                maxPolarAngle={Math.PI / 2}
-                minDistance={1}
-                maxDistance={5}
-            />
-        </Canvas>
+        <meshBasicMaterial toneMapped={false}>
+            <videoTexture attach="map" args={[video]} />
+        </meshBasicMaterial>
     );
 };
+
+interface FaceProps {
+    active: boolean;
+    position: [number, number, number];
+    rotation: [number, number, number];
+    videoSrc: string;
+    onClick: () => void;
+}
+
+const Face = ({ active, position, rotation, videoSrc, onClick }: FaceProps) => {
+    const [isHovered, setIsHovered] = useState(false);
+
+    // make cursor a pointer when hovering over the face
+    useEffect(() => {
+        document.body.style.cursor = isHovered ? "pointer" : "auto";
+        return () => {
+            document.body.style.cursor = "auto";
+        };
+    }, [isHovered]);
+
+    return (
+        <mesh
+            position={position}
+            rotation={rotation}
+            onClick={onClick}
+            onPointerOver={() => setIsHovered(true)}
+            onPointerOut={() => setIsHovered(false)}
+            scale={active ? 0.95 : 1.02}
+        >
+            <planeGeometry args={[1, 1]} />
+            <VideoMaterial videoSrc={videoSrc} />
+        </mesh>
+    );
+};
+
+type CubeProps = {
+    openPanel: boolean;
+    setOpenPanel: (view: boolean) => void;
+};
+
+const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
+    const store = useStore();
+    const screens = store.screens as Record<string, { src: string }>;
+
+    const cubeFaces: {
+        id: string;
+        position: [number, number, number];
+        rotation: [number, number, number];
+        videoSrc: string;
+    }[] = [
+        {
+            id: "A1",
+            position: [0, 0, 0.51],
+            rotation: [0, 0, 0],
+            videoSrc: screens.A1.src,
+        },
+        {
+            id: "B1",
+            position: [0, 0, -0.51],
+            rotation: [0, Math.PI, 0],
+            videoSrc: screens.B1.src,
+        },
+        {
+            id: "B2",
+            position: [0.51, 0, 0],
+            rotation: [0, Math.PI / 2, 0],
+            videoSrc: screens.B2.src,
+        },
+        {
+            id: "B3",
+            position: [-0.51, 0, 0],
+            rotation: [0, -Math.PI / 2, 0],
+            videoSrc: screens.B3.src,
+        },
+        {
+            id: "B4",
+            position: [0, 0.51, 0],
+            rotation: [-Math.PI / 2, 0, 0],
+            videoSrc: screens.B4.src,
+        },
+        {
+            id: "C1",
+            position: [0, -0.51, 0],
+            rotation: [Math.PI / 2, 0, 0],
+            videoSrc: screens.C4.src,
+        },
+    ];
+
+    console.log({ cubeFaces });
+
+    return (
+        <>
+            <group rotation={[Math.PI / 4 + 0.12, Math.PI / 4, 0]} scale={2}>
+                {cubeFaces.map((face, index) => (
+                    <Face
+                        key={index}
+                        position={face.position}
+                        rotation={face.rotation}
+                        videoSrc={face.videoSrc}
+                        active={store.currScreen === face.id}
+                        onClick={() => {
+                            if (face.id === store.currScreen) {
+                                store.setCurrScreen("");
+                                setOpenPanel(!openPanel);
+                            } else {
+                                store.setCurrScreen(face.id as TScreenKeys);
+                                setOpenPanel(true);
+                            }
+                        }}
+                    />
+                ))}
+                <mesh>
+                    <boxGeometry args={[1, 1]} />
+                    <meshBasicMaterial color="#F472B6" />
+                </mesh>
+            </group>
+        </>
+    );
+});
 
 export default Cube;

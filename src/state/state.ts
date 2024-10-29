@@ -1,5 +1,7 @@
 import { makeAutoObservable } from "mobx";
 import { screens, TScreenKeys } from "../components/groud/data";
+import { loadFromLocalStorage } from "../utils/manageLocalStorage";
+import isEqual from "../utils/isEqual";
 
 type TScreens = typeof screens;
 type TCurrScreen = TScreenKeys | "";
@@ -8,7 +10,11 @@ type TCurrItem = {
     src?: string;
 } | null;
 
+const initialScreens = (loadFromLocalStorage("screens") as TScreens) || screens;
+
 export type TState = {
+    isScreensUpdated: boolean;
+    setScreensUpdated: (val: boolean) => void;
     screens: TScreens;
     setScreens: (screens: TScreens) => void;
     currScreen: TCurrScreen;
@@ -19,9 +25,17 @@ export type TState = {
 
 export function makeState(): TState {
     return makeAutoObservable({
-        screens: screens,
-        setScreens(screens: TScreens) {
-            this.screens = screens;
+        isScreensUpdated: false as boolean,
+        setScreensUpdated(val: boolean) {
+            this.isScreensUpdated = val;
+        },
+        screens: initialScreens,
+        setScreens(newScreens: TScreens) {
+            this.screens = newScreens;
+            this.isScreensUpdated = !isEqual(
+                newScreens,
+                loadFromLocalStorage("screens") ?? screens
+            );
         },
         currScreen: "" as TCurrScreen,
         setCurrScreen(screen: TCurrScreen) {

@@ -1,8 +1,14 @@
 import { useState } from "react";
-import DDD from "./ddd";
-import DD from "./dd";
+import { MdCheck, MdClose } from "react-icons/md";
+import { useStore } from "../../state/context";
 import { cn } from "../../utils/cn";
-import { MdClose, MdCheck } from "react-icons/md";
+import {
+    loadFromLocalStorage,
+    saveToLocalStorage,
+} from "../../utils/manageLocalStorage";
+import DD from "./dd";
+import DDD from "./ddd";
+import { observer } from "mobx-react-lite";
 
 type GroundProps = {
     openPanel: boolean;
@@ -23,10 +29,13 @@ const IconButton = ({ onClick, children }: IconButtonProps) => (
     </button>
 );
 
-const Ground = (props: GroundProps) => {
+const Ground = observer((props: GroundProps) => {
+    const store = useStore();
     const { openPanel, setOpenPanel } = props;
     const [view, setView] = useState("3d");
     const [widerSide, setWiderSide] = useState<"x" | "y">("x");
+
+    console.log({ uP: store.isScreensUpdated });
 
     return (
         <div className="relative">
@@ -40,12 +49,32 @@ const Ground = (props: GroundProps) => {
                     "flex-col": widerSide === "x",
                 })}
             >
-                <IconButton onClick={() => setOpenPanel(!openPanel)}>
-                    <MdCheck className="text-xl" />
-                </IconButton>
-                <IconButton onClick={() => setOpenPanel(!openPanel)}>
-                    <MdClose className="text-xl" />
-                </IconButton>
+                {store.isScreensUpdated && (
+                    <>
+                        <IconButton
+                            onClick={() => {
+                                saveToLocalStorage("screens", store.screens);
+                                store.setScreensUpdated(false);
+                                setOpenPanel(false);
+                            }}
+                        >
+                            <MdCheck className="text-xl" />
+                        </IconButton>
+                        <IconButton
+                            onClick={() => {
+                                store.setScreens(
+                                    loadFromLocalStorage("screens")
+                                );
+                                store.setCurrScreen("");
+                                store.setCurrItem(null);
+                                setOpenPanel(false);
+                            }}
+                        >
+                            <MdClose className="text-xl" />
+                        </IconButton>
+                    </>
+                )}
+
                 <IconButton
                     onClick={() => setView(view === "3d" ? "2d" : "3d")}
                 >
@@ -56,6 +85,6 @@ const Ground = (props: GroundProps) => {
             </div>
         </div>
     );
-};
+});
 
 export default Ground;

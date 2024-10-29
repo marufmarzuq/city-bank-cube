@@ -1,10 +1,9 @@
-import { useState } from "react";
-import { FiUpload } from "react-icons/fi";
-import { cn } from "../../utils/cn";
-import { useStore } from "../../state/context";
 import { observer } from "mobx-react-lite";
+import { Fragment, useState } from "react";
+import { FiUpload } from "react-icons/fi";
 import { MdCheck, MdClose } from "react-icons/md";
-import { TScreenKeys } from "../groud/data";
+import { useStore } from "../../state/context";
+import { cn } from "../../utils/cn";
 
 type PanelProps = {
     openPanel: boolean;
@@ -37,11 +36,23 @@ const Panel = observer((props: PanelProps) => {
                 name: "For Bigger Escape",
                 src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
             },
+            {
+                name: "Mov bbb",
+                src: "https://www.w3schools.com/html/mov_bbb.mp4",
+            },
         ],
         widgets: [
             {
                 name: "Weather widget 1",
                 src: "https://nerdschalk.com/wp-content/uploads/2021/10/android-12-weather-widget-location-needed-759x427.png",
+            },
+            {
+                name: "Weather widget 2",
+                src: "https://9to5mac.com/wp-content/uploads/sites/6/2023/04/Apple-Weather-app.jpg?quality=82&strip=all&w=1600",
+            },
+            {
+                name: "Blank",
+                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYgXYTeF1E1g3MWVLnAz3r66e3OPpKlKVkUQ&s",
             },
         ],
     };
@@ -83,10 +94,9 @@ const Panel = observer((props: PanelProps) => {
                     }
                 )}
             >
-                {items[tab].map((item) => (
-                    <>
+                {items[tab].map((item, i) => (
+                    <Fragment key={item.name + i}>
                         <div
-                            key={item.name}
                             className={cn(
                                 "h-[150px] flex-shrink-0 border border-neutral-200 cursor-pointer bg-neutral-50 hover:border-pink-200 hover:border-4",
                                 {
@@ -138,17 +148,16 @@ const Panel = observer((props: PanelProps) => {
                                     <button
                                         className="hover:text-pink-400"
                                         onClick={() => {
-                                            const newScreens = store.screens;
-                                            newScreens[
-                                                store.currScreen as TScreenKeys
-                                            ] = {
-                                                type:
-                                                    tab === "uploads"
-                                                        ? "video"
-                                                        : "widget",
-                                                src: item.src,
-                                            };
-                                            store.setScreens(newScreens);
+                                            store.setScreens({
+                                                ...store.screens,
+                                                [store.currScreen]: {
+                                                    type:
+                                                        tab === "uploads"
+                                                            ? "video"
+                                                            : "widget",
+                                                    src: item.src,
+                                                },
+                                            });
                                             store.setCurrScreen("");
                                             store.setCurrItem(null);
                                             setOpenPanel(false);
@@ -158,7 +167,7 @@ const Panel = observer((props: PanelProps) => {
                                     </button>
                                 </div>
                             )}
-                    </>
+                    </Fragment>
                 ))}
             </div>
         </div>
