@@ -14,7 +14,7 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
             <Canvas
                 shadows
                 camera={{
-                    position: [0, 0, 7.8],
+                    position: [-5, 1.5, 4],
                     fov: 90,
                     near: 0.1,
                     far: 100,
