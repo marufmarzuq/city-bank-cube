@@ -79,8 +79,9 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
     }[] = [
         {
             id: "A1",
-            position: [0, 0, 0.51],
-            rotation: [0, 0, 0],
+            position: [0, 0.51, 0],
+            rotation: [-Math.PI / 2, 0, 0],
+
             videoSrc: screens.A1.src,
         },
         {
@@ -97,20 +98,20 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
         },
         {
             id: "B3",
-            position: [-0.51, 0, 0],
-            rotation: [0, -Math.PI / 2, 0],
+            position: [0, 0, 0.51],
+            rotation: [0, 0, 0],
             videoSrc: screens.B3.src,
         },
         {
             id: "B4",
-            position: [0, 0.51, 0],
-            rotation: [-Math.PI / 2, 0, 0],
+            position: [-0.51, 0, 0],
+            rotation: [0, -Math.PI / 2, 0],
             videoSrc: screens.B4.src,
         },
         {
             id: "C4",
             position: [0, -0.51, 0],
-            rotation: [Math.PI / 2, 0, 0],
+            rotation: [Math.PI / 2, 0, Math.PI],
             videoSrc: screens.C4.src,
         },
     ];

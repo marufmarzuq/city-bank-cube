@@ -32,12 +32,16 @@ const Panel = observer((props: PanelProps) => {
                 src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
             },
             {
-                name: "For Bigger Escape",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+                name: "We Are Going On Bullrun",
+                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
             },
             {
-                name: "Mov bbb",
-                src: "https://www.w3schools.com/html/mov_bbb.mp4",
+                name: "Tears of Steel",
+                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+            },
+            {
+                name: "Subaru Outback On Street And Dirt",
+                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
             },
         ],
         widgets: [

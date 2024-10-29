@@ -18,11 +18,18 @@ type GroundProps = {
 type IconButtonProps = {
     onClick: () => void;
     children: React.ReactNode;
+    isDark: boolean;
 };
 
-const IconButton = ({ onClick, children }: IconButtonProps) => (
+const IconButton = ({ onClick, children, isDark }: IconButtonProps) => (
     <button
-        className="border border-black h-10 w-10 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-all outline-none"
+        className={cn(
+            "border border-black h-10 w-10 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-all outline-none",
+            {
+                "border-white text-white hover:bg-white hover:text-black":
+                    isDark,
+            }
+        )}
         onClick={onClick}
     >
         {children}
@@ -50,6 +57,7 @@ const Ground = observer((props: GroundProps) => {
                 {store.isScreensUpdated && (
                     <>
                         <IconButton
+                            isDark={view === "3d"}
                             onClick={() => {
                                 saveToLocalStorage("screens", store.screens);
                                 store.setScreensUpdated(false);
@@ -59,6 +67,7 @@ const Ground = observer((props: GroundProps) => {
                             <MdCheck className="text-xl" />
                         </IconButton>
                         <IconButton
+                            isDark={view === "3d"}
                             onClick={() => {
                                 store.setScreens(
                                     loadFromLocalStorage("screens")
@@ -74,6 +83,7 @@ const Ground = observer((props: GroundProps) => {
                 )}
 
                 <IconButton
+                    isDark={view === "3d"}
                     onClick={() => setView(view === "3d" ? "2d" : "3d")}
                 >
                     <span className="text-[17px]">
