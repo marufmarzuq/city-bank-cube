@@ -17,7 +17,6 @@ const Dd = observer(({ openPanel, setOpenPanel, setWiderSide }: DdProps) => {
         w: window.innerWidth - (openPanel ? 300 : 0),
         h: window.innerHeight,
     });
-    console.log({ openPanel, setOpenPanel });
 
     useEffect(() => {
         const pw = 300;

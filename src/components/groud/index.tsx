@@ -35,8 +35,6 @@ const Ground = observer((props: GroundProps) => {
     const [view, setView] = useState("3d");
     const [widerSide, setWiderSide] = useState<"x" | "y">("x");
 
-    console.log({ uP: store.isScreensUpdated });
-
     return (
         <div className="relative">
             {view === "3d" ? (

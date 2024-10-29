@@ -115,8 +115,6 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
         },
     ];
 
-    console.log({ cubeFaces });
-
     return (
         <>
             <group rotation={[Math.PI / 4 + 0.12, Math.PI / 4, 0]} scale={2}>

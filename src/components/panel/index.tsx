@@ -12,8 +12,7 @@ type PanelProps = {
 
 const Panel = observer((props: PanelProps) => {
     const store = useStore();
-    const { openPanel, setOpenPanel } = props;
-    console.log({ openPanel, setOpenPanel });
+    const { setOpenPanel } = props;
     const [tab, setTab] = useState<"uploads" | "widgets">("uploads");
 
     const items: {

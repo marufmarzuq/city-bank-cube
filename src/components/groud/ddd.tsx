@@ -8,7 +8,6 @@ type DddProps = {
 };
 
 const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
-    console.log({ openPanel, setOpenPanel });
     return (
         <div className="h-dvh">
             <Canvas
