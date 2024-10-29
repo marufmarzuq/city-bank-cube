@@ -108,7 +108,7 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
             videoSrc: screens.B4.src,
         },
         {
-            id: "C1",
+            id: "C4",
             position: [0, -0.51, 0],
             rotation: [Math.PI / 2, 0, 0],
             videoSrc: screens.C4.src,
@@ -117,7 +117,11 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
 
     return (
         <>
-            <group rotation={[Math.PI / 4 + 0.12, Math.PI / 4, 0]} scale={2}>
+            <group
+                rotation={[Math.PI / 4 + 0.12, Math.PI / 4, 0]}
+                scale={2}
+                position={[0, 1.05, 0]}
+            >
                 {cubeFaces.map((face, index) => (
                     <Face
                         key={index}
