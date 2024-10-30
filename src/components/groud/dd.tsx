@@ -48,7 +48,7 @@ const Dd = observer(({ openPanel, setOpenPanel, setWiderSide }: DdProps) => {
     }, [window.innerWidth, window.innerHeight, openPanel]);
 
     return (
-        <div className="h-dvh flex items-center justify-center">
+        <div className="h-lvh flex items-center justify-center">
             <div
                 style={{
                     width: containerSize.w,
@@ -75,7 +75,7 @@ const Dd = observer(({ openPanel, setOpenPanel, setWiderSide }: DdProps) => {
                     >
                         <div
                             className={cn(
-                                "w-full h-full self-stretch flex items-center justify-center bg-neutral-50",
+                                "w-full h-full self-stretch flex items-center justify-center bg-neutral-100",
                                 {
                                     "transform rotate-180":
                                         screenKey === "A1" ||

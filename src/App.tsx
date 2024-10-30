@@ -8,7 +8,7 @@ const App = () => {
 
     return (
         <div
-            className={cn("h-dvh grid transition-all overflow-hidden", {
+            className={cn("h-lvh grid transition-all overflow-hidden", {
                 "grid-cols-[100vw_300px]": !openPanel,
                 "grid-cols-[calc(100vw-300px)_300px]": openPanel,
             })}

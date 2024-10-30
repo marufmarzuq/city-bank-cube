@@ -50,8 +50,8 @@ const Ground = observer((props: GroundProps) => {
                 <DD {...{ openPanel, setOpenPanel, setWiderSide }} />
             )}
             <div
-                className={cn("absolute bottom-3 right-3 flex gap-2", {
-                    "flex-col": widerSide === "x",
+                className={cn("absolute top-3 right-3 flex gap-2", {
+                    "flex-col-reverse": widerSide === "x",
                 })}
             >
                 {store.isScreensUpdated && (

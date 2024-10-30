@@ -10,7 +10,7 @@ type DddProps = {
 
 const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
     return (
-        <div className="h-dvh">
+        <div className="h-lvh">
             <Canvas
                 shadows
                 camera={{
