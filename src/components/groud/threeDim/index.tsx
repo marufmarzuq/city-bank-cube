@@ -1,14 +1,14 @@
 import { OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import Cube from "./Cube";
-import Environment from "./Environment";
+import Infrastructure from "./Infrastructure";
 
-type DddProps = {
+type ThreeDimProps = {
     openPanel: boolean;
     setOpenPanel: (view: boolean) => void;
 };
 
-const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
+const ThreeDim = ({ openPanel, setOpenPanel }: ThreeDimProps) => {
     return (
         <div className="h-lvh">
             <Canvas
@@ -23,11 +23,10 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
                 <color attach="background" args={["#202030"]} />
                 <fog attach="fog" args={["#202030", 5, 20]} />
 
-                <Environment>
-                    <Cube {...{ openPanel, setOpenPanel }} />
-                </Environment>
+                <Cube {...{ openPanel, setOpenPanel }} />
+                <Infrastructure />
+
                 <gridHelper args={[70, 70]} position={[0, -2, 0]} />
-                {/* <axesHelper args={[5]} /> */}
 
                 <hemisphereLight
                     intensity={0.2}
@@ -47,10 +46,14 @@ const Ddd = ({ openPanel, setOpenPanel }: DddProps) => {
                     position={[0, 5, 5]}
                     intensity={1}
                 />
-                <OrbitControls minDistance={1} maxDistance={7} />
+                <OrbitControls
+                    minDistance={1}
+                    maxDistance={7}
+                    target={[0, 1, 0]}
+                />
             </Canvas>
         </div>
     );
 };
 
-export default Ddd;
+export default ThreeDim;

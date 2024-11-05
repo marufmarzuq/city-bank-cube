@@ -5,10 +5,7 @@ import isEqual from "../utils/isEqual";
 
 type TScreens = typeof screens;
 type TCurrScreen = TScreenKeys | "";
-type TCurrItem = {
-    type: "video" | "widget";
-    src?: string;
-} | null;
+type TCurrItem = TScreens[keyof TScreens];
 
 const initialScreens = (loadFromLocalStorage("screens") as TScreens) || screens;
 

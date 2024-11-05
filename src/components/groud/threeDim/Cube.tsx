@@ -1,13 +1,15 @@
+import { Html } from "@react-three/drei";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
-import { useStore } from "../../state/context";
-import { TScreenKeys } from "./data";
+import { useStore } from "../../../state/context";
+import Widget, { Twidgets } from "../../widgets";
+import { TScreenKeys, TScreens } from "../data";
 
 interface VideoMaterialProps {
-    videoSrc: string;
+    src: string;
 }
 
-const VideoMaterial = ({ videoSrc }: VideoMaterialProps) => {
+const VideoMaterial = ({ src }: VideoMaterialProps) => {
     const [video] = useState(() =>
         Object.assign(document.createElement("video"), {
             crossOrigin: "Anonymous",
@@ -17,9 +19,9 @@ const VideoMaterial = ({ videoSrc }: VideoMaterialProps) => {
     );
 
     useEffect(() => {
-        video.src = videoSrc;
+        video.src = src;
         void video.play();
-    }, [videoSrc, video]);
+    }, [src, video]);
 
     return (
         <meshBasicMaterial toneMapped={false}>
@@ -32,14 +34,13 @@ interface FaceProps {
     active: boolean;
     position: [number, number, number];
     rotation: [number, number, number];
-    videoSrc: string;
+    screen: TScreens[keyof TScreens];
     onClick: () => void;
 }
 
-const Face = ({ active, position, rotation, videoSrc, onClick }: FaceProps) => {
+const Face = ({ active, position, rotation, onClick, screen }: FaceProps) => {
     const [isHovered, setIsHovered] = useState(false);
 
-    // make cursor a pointer when hovering over the face
     useEffect(() => {
         document.body.style.cursor = isHovered ? "pointer" : "auto";
         return () => {
@@ -57,7 +58,33 @@ const Face = ({ active, position, rotation, videoSrc, onClick }: FaceProps) => {
             scale={active ? 0.95 : 1.02}
         >
             <planeGeometry args={[1, 1]} />
-            <VideoMaterial videoSrc={videoSrc} />
+            {screen && screen !== "mute" ? (
+                screen.type === "video" ? (
+                    <VideoMaterial src={screen?.src} />
+                ) : (
+                    <>
+                        <Html occlude="blending" transform center>
+                            <div
+                                onClick={onClick}
+                                style={{
+                                    width: "40px",
+                                    height: "40px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    background: "rgba(0, 0, 0, 0.5)",
+                                    color: "white",
+                                    fontSize: "5px",
+                                }}
+                            >
+                                <Widget type={screen.src as Twidgets} />
+                            </div>
+                        </Html>
+                    </>
+                )
+            ) : (
+                <meshBasicMaterial color="#202030" />
+            )}
         </mesh>
     );
 };
@@ -69,50 +96,41 @@ type CubeProps = {
 
 const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
     const store = useStore();
-    const screens = store.screens as Record<string, { src: string }>;
 
     const cubeFaces: {
-        id: string;
+        id: TScreenKeys;
         position: [number, number, number];
         rotation: [number, number, number];
-        videoSrc: string;
     }[] = [
         {
             id: "A1",
             position: [0, 0.51, 0],
             rotation: [-Math.PI / 2, 0, 0],
-
-            videoSrc: screens.A1.src,
         },
         {
             id: "B1",
             position: [0, 0, -0.51],
             rotation: [0, Math.PI, 0],
-            videoSrc: screens.B1.src,
         },
         {
             id: "B2",
             position: [0.51, 0, 0],
             rotation: [0, Math.PI / 2, 0],
-            videoSrc: screens.B2.src,
         },
         {
             id: "B3",
             position: [0, 0, 0.51],
             rotation: [0, 0, 0],
-            videoSrc: screens.B3.src,
         },
         {
             id: "B4",
             position: [-0.51, 0, 0],
             rotation: [0, -Math.PI / 2, 0],
-            videoSrc: screens.B4.src,
         },
         {
             id: "C4",
             position: [0, -0.51, 0],
             rotation: [Math.PI / 2, 0, Math.PI],
-            videoSrc: screens.C4.src,
         },
     ];
 
@@ -126,18 +144,19 @@ const Cube = observer(({ openPanel, setOpenPanel }: CubeProps) => {
                 {cubeFaces.map((face, index) => (
                     <Face
                         key={index}
-                        position={face.position}
-                        rotation={face.rotation}
-                        videoSrc={face.videoSrc}
-                        active={store.currScreen === face.id}
-                        onClick={() => {
-                            if (face.id === store.currScreen) {
-                                store.setCurrScreen("");
-                                setOpenPanel(!openPanel);
-                            } else {
-                                store.setCurrScreen(face.id as TScreenKeys);
-                                setOpenPanel(true);
-                            }
+                        {...{
+                            ...face,
+                            screen: store.screens[face.id],
+                            active: store.currScreen === face.id,
+                            onClick: () => {
+                                if (face.id === store.currScreen) {
+                                    store.setCurrScreen("");
+                                    setOpenPanel(!openPanel);
+                                } else {
+                                    store.setCurrScreen(face.id as TScreenKeys);
+                                    setOpenPanel(true);
+                                }
+                            },
                         }}
                     />
                 ))}

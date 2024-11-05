@@ -4,6 +4,7 @@ import { FiUpload } from "react-icons/fi";
 import { MdCheck, MdClose } from "react-icons/md";
 import { useStore } from "../../state/context";
 import { cn } from "../../utils/cn";
+import Widget, { Twidgets } from "../widgets";
 
 type PanelProps = {
     openPanel: boolean;
@@ -16,48 +17,18 @@ const Panel = observer((props: PanelProps) => {
     const [tab, setTab] = useState<"uploads" | "widgets">("uploads");
 
     const items: {
-        [key in "uploads" | "widgets"]: { name: string; src?: string }[];
+        uploads: string[];
+        widgets: Twidgets[];
     } = {
         uploads: [
-            {
-                name: "Big Buck Bunny",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            },
-            {
-                name: "Elephant Dream",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            },
-            {
-                name: "For Bigger Blazes",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            },
-            {
-                name: "We Are Going On Bullrun",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
-            },
-            {
-                name: "Tears of Steel",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
-            },
-            {
-                name: "Subaru Outback On Street And Dirt",
-                src: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
-            },
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
         ],
-        widgets: [
-            {
-                name: "Weather widget 1",
-                src: "https://nerdschalk.com/wp-content/uploads/2021/10/android-12-weather-widget-location-needed-759x427.png",
-            },
-            {
-                name: "Weather widget 2",
-                src: "https://9to5mac.com/wp-content/uploads/sites/6/2023/04/Apple-Weather-app.jpg?quality=82&strip=all&w=1600",
-            },
-            {
-                name: "Blank",
-                src: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYgXYTeF1E1g3MWVLnAz3r66e3OPpKlKVkUQ&s",
-            },
-        ],
+        widgets: ["weather", "analog-clock", "digital-clock"],
     };
 
     return (
@@ -97,49 +68,51 @@ const Panel = observer((props: PanelProps) => {
                     }
                 )}
             >
-                {items[tab].map((item, i) => (
-                    <Fragment key={item.name + i}>
+                {items[tab].map((item) => (
+                    <Fragment key={item}>
                         <div
                             className={cn(
                                 "h-[150px] flex-shrink-0 border border-neutral-200 cursor-pointer bg-neutral-50 hover:border-pink-200 hover:border-4",
                                 {
                                     "border-4 border-pink-400 hover:border-pink-400":
                                         store.currItem &&
-                                        store.currItem.src === item.src,
+                                        store.currItem !== "mute" &&
+                                        store.currItem.src === item,
                                 }
                             )}
                             onClick={() => {
+                                if (store.currItem && store.currItem === "mute")
+                                    return;
+
                                 store.setCurrItem(
                                     store.currItem &&
-                                        store.currItem.src === item.src
+                                        store.currItem.src === item
                                         ? null
                                         : {
                                               type:
                                                   tab === "uploads"
                                                       ? "video"
                                                       : "widget",
-                                              src: item.src,
+                                              src: item,
                                           }
                                 );
                             }}
                         >
                             {tab === "uploads" ? (
                                 <video
-                                    src={item.src}
+                                    src={item}
                                     className="w-full h-full object-cover"
                                     muted
                                     autoPlay
                                     loop
                                 />
                             ) : (
-                                <img
-                                    src={item.src}
-                                    className="w-full h-full object-cover"
-                                />
+                                <Widget type={item as Twidgets} />
                             )}
                         </div>
                         {store.currItem &&
-                            store.currItem.src === item.src &&
+                            store.currItem !== "mute" &&
+                            store.currItem.src === item &&
                             store.currScreen && (
                                 <div className="px-1 flex justify-end gap-3 items-center">
                                     <button
@@ -158,7 +131,7 @@ const Panel = observer((props: PanelProps) => {
                                                         tab === "uploads"
                                                             ? "video"
                                                             : "widget",
-                                                    src: item.src,
+                                                    src: item,
                                                 },
                                             });
                                             store.setCurrScreen("");

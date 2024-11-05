@@ -1,13 +1,8 @@
-import FrontText from "./FrontText";
+import { Center, Text3D } from "@react-three/drei";
 
-type EnvironmentProps = {
-    children: React.ReactNode;
-};
-
-const Environment = ({ children }: EnvironmentProps) => {
+const Infrastructure = () => {
     return (
         <group>
-            {children}
             <mesh position={[0, -1.5, 0.12]}>
                 <boxGeometry args={[2, 1, 2]} />
                 <meshStandardMaterial
@@ -40,9 +35,23 @@ const Environment = ({ children }: EnvironmentProps) => {
                     opacity={0.5}
                 />
             </mesh>
-            <FrontText />
+            <Center position={[0, -0.7, 3]}>
+                <Text3D
+                    font="/Inter_Medium_Regular.json"
+                    letterSpacing={-0.03}
+                    size={0.6}
+                >
+                    CITY BANK CENTER
+                    <meshStandardMaterial
+                        attach="material"
+                        color="#ffffff"
+                        transparent
+                        opacity={0.5}
+                    />
+                </Text3D>
+            </Center>
         </group>
     );
 };
 
-export default Environment;
+export default Infrastructure;

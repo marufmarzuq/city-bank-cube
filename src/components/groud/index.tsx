@@ -1,3 +1,4 @@
+import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { MdCheck, MdClose } from "react-icons/md";
 import { useStore } from "../../state/context";
@@ -6,9 +7,8 @@ import {
     loadFromLocalStorage,
     saveToLocalStorage,
 } from "../../utils/manageLocalStorage";
-import DD from "./dd";
-import DDD from "./ddd";
-import { observer } from "mobx-react-lite";
+import ThreeDim from "./threeDim";
+import TwoDim from "./twoDim";
 
 type GroundProps = {
     openPanel: boolean;
@@ -45,9 +45,9 @@ const Ground = observer((props: GroundProps) => {
     return (
         <div className="relative">
             {view === "3d" ? (
-                <DDD {...{ openPanel, setOpenPanel }} />
+                <ThreeDim {...{ openPanel, setOpenPanel }} />
             ) : (
-                <DD {...{ openPanel, setOpenPanel, setWiderSide }} />
+                <TwoDim {...{ openPanel, setOpenPanel, setWiderSide }} />
             )}
             <div
                 className={cn("absolute top-3 right-3 flex gap-2", {

@@ -12,50 +12,22 @@ export type TScreenKeys =
     | "C3"
     | "C4";
 
-export const screens: Record<
+export type TScreens = Record<
     TScreenKeys,
-    { type?: string; src?: string; isBlank?: boolean }
-> = {
-    A1: {
-        type: "",
-        src: "",
-    },
-    A2: {
-        isBlank: true,
-    },
-    A3: {
-        isBlank: true,
-    },
-    A4: {
-        isBlank: true,
-    },
-    B1: {
-        type: "",
-        src: "",
-    },
-    B2: {
-        type: "",
-        src: "",
-    },
-    B3: {
-        type: "",
-        src: "",
-    },
-    B4: {
-        type: "",
-        src: "",
-    },
-    C1: {
-        isBlank: true,
-    },
-    C2: {
-        isBlank: true,
-    },
-    C3: {
-        isBlank: true,
-    },
-    C4: {
-        type: "",
-        src: "",
-    },
+    { type: "video" | "widget"; src: string } | "mute" | null
+>;
+
+export const screens: TScreens = {
+    A1: null,
+    A2: "mute",
+    A3: "mute",
+    A4: "mute",
+    B1: null,
+    B2: null,
+    B3: null,
+    B4: null,
+    C1: "mute",
+    C2: "mute",
+    C3: "mute",
+    C4: null,
 };
