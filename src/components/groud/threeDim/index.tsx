@@ -47,7 +47,7 @@ const ThreeDim = ({ openPanel, setOpenPanel }: ThreeDimProps) => {
                     intensity={1}
                 />
                 <OrbitControls
-                    minDistance={1}
+                    minDistance={2}
                     maxDistance={7}
                     target={[0, 1, 0]}
                 />

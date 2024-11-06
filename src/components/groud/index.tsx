@@ -24,7 +24,7 @@ type IconButtonProps = {
 const IconButton = ({ onClick, children, isDark }: IconButtonProps) => (
     <button
         className={cn(
-            "border border-black h-10 w-10 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-all outline-none",
+            "border border-black h-10 w-10 flex items-center justify-center rounded-full hover:bg-black hover:text-white transition-all outline-none z-[9999999999]",
             {
                 "border-white text-white hover:bg-white hover:text-black":
                     isDark,

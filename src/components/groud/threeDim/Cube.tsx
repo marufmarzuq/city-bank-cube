@@ -57,13 +57,23 @@ const Face = ({ active, position, rotation, onClick, screen }: FaceProps) => {
             onPointerOut={() => setIsHovered(false)}
             scale={active ? 0.95 : 1.02}
         >
-            <planeGeometry args={[1, 1]} />
+            {screen && screen !== "mute" && screen.type === "widget" ? (
+                <></>
+            ) : (
+                <planeGeometry args={[1, 1]} />
+            )}
             {screen && screen !== "mute" ? (
                 screen.type === "video" ? (
                     <VideoMaterial src={screen?.src} />
                 ) : (
                     <>
-                        <Html occlude="blending" transform center>
+                        <Html
+                            style={{ userSelect: "none" }}
+                            castShadow
+                            receiveShadow
+                            occlude="blending"
+                            transform
+                        >
                             <div
                                 onClick={onClick}
                                 style={{
@@ -72,8 +82,6 @@ const Face = ({ active, position, rotation, onClick, screen }: FaceProps) => {
                                     display: "flex",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    background: "rgba(0, 0, 0, 0.5)",
-                                    color: "white",
                                     fontSize: "5px",
                                 }}
                             >

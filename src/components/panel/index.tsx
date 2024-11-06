@@ -78,6 +78,7 @@ const Panel = observer((props: PanelProps) => {
                                         store.currItem &&
                                         store.currItem !== "mute" &&
                                         store.currItem.src === item,
+                                    "h-[271px]": tab === "widgets",
                                 }
                             )}
                             onClick={() => {

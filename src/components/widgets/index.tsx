@@ -10,7 +10,7 @@ export type Twidgets =
 
 const Widget = ({ type }: { type: Twidgets }) => {
     return (
-        <div>
+        <>
             {type === "digital-clock" ? (
                 <DigitalClock />
             ) : type === "analog-clock" ? (
@@ -20,7 +20,7 @@ const Widget = ({ type }: { type: Twidgets }) => {
             ) : (
                 "Widget not found"
             )}
-        </div>
+        </>
     );
 };
 
