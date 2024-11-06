@@ -1,8 +1,7 @@
-import { Html } from "@react-three/drei";
+import { Image } from "@react-three/drei";
 import { observer } from "mobx-react-lite";
 import { useEffect, useState } from "react";
 import { useStore } from "../../../state/context";
-import Widget, { Twidgets } from "../../widgets";
 import { TScreenKeys, TScreens } from "../data";
 
 interface VideoMaterialProps {
@@ -66,29 +65,7 @@ const Face = ({ active, position, rotation, onClick, screen }: FaceProps) => {
                 screen.type === "video" ? (
                     <VideoMaterial src={screen?.src} />
                 ) : (
-                    <>
-                        <Html
-                            style={{ userSelect: "none" }}
-                            castShadow
-                            receiveShadow
-                            occlude="blending"
-                            transform
-                        >
-                            <div
-                                onClick={onClick}
-                                style={{
-                                    width: "40px",
-                                    height: "40px",
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    fontSize: "5px",
-                                }}
-                            >
-                                <Widget type={screen.src as Twidgets} />
-                            </div>
-                        </Html>
-                    </>
+                    <Image raycast={() => null} url={`/${screen?.src}.png`} />
                 )
             ) : (
                 <meshBasicMaterial color="#202030" />

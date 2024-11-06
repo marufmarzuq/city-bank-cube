@@ -1,0 +1,4 @@
+const ACCU_API_KEY = "VThm7Kc1CdmfZlSC3UtXK6ldvRGLj8rP";
+const ACCU_LOCATION_KEY = "28143";
+
+export { ACCU_API_KEY, ACCU_LOCATION_KEY };
